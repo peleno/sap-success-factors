@@ -18,6 +18,7 @@ class VacancyController(MethodView):
         vacancies = self.vacancy_service.select_all_vacancies()
         vacancy_dicts = [schema.dump(vacancy) for vacancy in vacancies]
         response = Response(json.dumps(vacancy_dicts), status=200)
+        response.headers.add("Access-Control-Allow-Origin", "*")
         return response
 
     def post(self):
@@ -39,3 +40,12 @@ class VacancyController(MethodView):
         new_vacancy = schema.load(vacancy_request_record)
         self.vacancy_service.update_vacancy(new_vacancy)
         return Response(status=204)
+
+    def options(self, vacancy_id=None):
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+        return Response(status=204, headers=headers)

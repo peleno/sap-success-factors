@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from controllers.candidate_controller import CandidateController
 from controllers.hiring_progress_controller import HiringProgressController
@@ -12,6 +13,7 @@ from service.hiring_progress_service import HiringProgressService
 from service.vacancy_service import VacancyService
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
@@ -21,7 +23,7 @@ def hello_world():  # put application's code here
 
 app.add_url_rule('/vacancy/', view_func=VacancyController.as_view(
     'vacancies', VacancyService(VacancyRepository(), VacancyCsvReader())))
-app.add_url_rule('/vacancy/<int:vacancy_id>', view_func=VacancyController.as_view(
+app.add_url_rule('/vacancy/<int:vacancy_id>/', view_func=VacancyController.as_view(
     'vacancy', VacancyService(VacancyRepository(), VacancyCsvReader())))
 
 app.add_url_rule('/candidate/', view_func=CandidateController.as_view(
